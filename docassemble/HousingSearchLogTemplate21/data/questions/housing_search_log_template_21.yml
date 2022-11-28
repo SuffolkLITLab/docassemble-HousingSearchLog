@@ -1,0 +1,338 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+---
+metadata:
+  title: |
+    Create a Housing Search Log
+  short title: |
+    My Housing Search
+  authors:
+    - Ana Morrissette
+---
+mandatory: True
+comment: |
+  Global interview metadata
+variable name: interview_metadata["housing_search_log_template_21"]
+data:
+  al_weaver_version: "1.7.0"
+  generated on: "2022-11-21"
+  title: >-
+    My Housing Search Log
+  short title: >-
+    Housing search log template, to be filled out to keep track of housing search
+  description: |-
+    Creates a record of properties contacted, visited, or applied to rent.
+  original_form: >-
+    None
+  allowed courts: []
+  categories: []
+  typical role: "na"
+  generate download screen: True
+---
+code: |
+  interview_metadata['main_interview_key'] =  'housing_search_log_template_21'
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-HousingSearchLogTemplate21'
+---
+code: |
+  interview_short_title = "Keep track of properties for your housing search."
+---
+code: |
+  al_form_type = "other" 
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+  - prop: ALIndividual
+  - prop.phone: ALIndividual
+---
+sections:
+  - review_housing_search_log_template_21: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_housing_search_log_template_21
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["housing_search_log_template_21"]["allowed courts"]
+  nav.set_section("review_housing_search_log_template_21")
+  user_role = "na"
+  users.gather()
+  set_parts(subtitle=str(users))
+  bedroom_size
+  prop.info
+  interview_order_housing_search_log_template_21 = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  housing_search_log_template_21_intro
+  interview_order_housing_search_log_template_21
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  housing_search_log_template_21_download
+---
+comment: |
+  This question is used to introduce your interview. Please customize
+id: Housing_Search_Log
+continue button field: housing_search_log_template_21_intro
+question: |
+  Housing Search Log
+subquestion: |
+  This will create a form to use to keep track of properties contacted, visited, or applied to rent.
+---
+id: your name
+sets:
+  - users[0].name.first
+  - users[0].name.last
+question: |
+  What is your name?
+fields:
+  - code: |
+      users[0].name_fields(show_suffix=False)
+---
+id: Voucher Information
+question: |
+  Voucher Information
+fields:
+  - "Bedroom size": bedroom_size
+    input type: dropdown
+    choices:
+      - Studio
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5+
+    required: False
+  - "Voucher issuer": voucher_issuer
+  - "Date voucher was issued": voucher_date
+    datatype: date
+    required: False
+---
+id: contact logic 
+code: | 
+  if contact_q == True:
+    contact_q = 'yes'
+---
+id: Property Information
+question: |
+  Property Information
+subquestion: |
+  Please fill out as much information as you have for the property you contacted to rent, visited, or applied to rent. 
+fields:
+  - "**Property Address**": prop.info
+  - "Link to online posting of property": prop_link
+    required: False
+  - "I contacted the property listing": contact_q
+    datatype: yesnowide
+  - "Date of Contact": contact_date
+    datatype: date
+    required: False
+    js show if: |
+      val('contact_q') == true
+  - "Phone number contacted for property": prop.phone.number
+    datatype: text
+    required: False
+    js show if: |
+      val('contact_q') == true
+  - "Email address contacted for property": prop.email
+    datatype: email
+    required: False
+    js show if: |
+      val('contact_q') == true
+  - "I visited the property": visit_q
+    datatype: yesnowide
+    js show if: |
+      val('contact_q') == true  
+  - "Date of Visit": visit_date
+    datatype: date
+    required: False
+    js show if: |
+      val('visit_q') == true  
+  - "I applied to rent the property": apply_q
+    datatype: yesnowide
+    js show if: |
+      val('visit_q') == true 
+  - "Date of Application": apply_date
+    datatype: date
+    required: False
+    js show if: |
+      val('apply_q') == true 
+  - "**Notes about property**": user_notes
+    required: False
+  - "**What is the status of renting this property?**": prop_status
+    required: False
+---
+id: preview housing_search_log_template_21
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_recipient_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_housing_search_log_template_21'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: housing_search_log_template_21_preview_question    
+---
+code: |
+  signature_fields = []
+---
+id: housing search log template 21 review screen
+event: review_housing_search_log_template_21
+question: |
+  Review your answers
+review:
+  - Edit: bedroom_size
+    button: |
+      **Bedroom size**:
+      ${ bedroom_size }
+  - Edit: prop_link
+    button: |
+      **Prop link**:
+      ${ prop_link }
+  - Edit: contact_date
+    button: |
+      **Date of Contact**:
+      ${ contact_date }
+  - Edit: prop.info
+    button: |
+      **Prop.info**:
+      ${ prop.info }
+  - Edit: prop.phone.number
+    button: |
+      **Prop.phone.number**:
+      ${ prop.phone.number }
+  - Edit: contact_q
+    button: |
+      **Contact q**:
+      ${ word(yesno(contact_q)) }
+  - Edit: voucher_issuer
+    button: |
+      **Voucher issuer**:
+      ${ voucher_issuer }
+  - Edit: prop_status
+    button: |
+      **Prop status**:
+      ${ prop_status }
+  - Edit: visit_date
+    button: |
+      **Date of Visit**:
+      ${ visit_date }
+  - Edit: voucher_date
+    button: |
+      **Date of Voucher**:
+      ${ voucher_date }
+  - Edit: visit_q
+    button: |
+      **Visit q**:
+      ${ word(yesno(visit_q)) }
+  - Edit: apply_q
+    button: |
+      **Apply q**:
+      ${ word(yesno(apply_q)) }
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: apply_date
+    button: |
+      **Date of Apply**:
+      ${ apply_date }
+  - Edit: user_notes
+    button: |
+      **User notes**:
+      ${ user_notes }
+  - Edit: prop.email
+    button: |
+      **Prop.email**:
+      ${ prop.email }
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+id: download housing_search_log_template_21
+event: housing_search_log_template_21_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+  ${ action_button_html(url_action('review_housing_search_log_template_21'), label='Edit answers', color='info') }
+  
+  
+  ${ al_user_bundle.download_list_html() }
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  #- housing_search_log_template_21_Post_interview_instructions: ALDocument.using(title="Instructions", filename="housing_search_log_template_21_next_steps.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - housing_search_log_template_21_attachment: ALDocument.using(title="Housing Search Log", filename="housing_search_log_template_21", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[ housing_search_log_template_21_attachment], filename="housing_search_log_template_21", title="All forms to download for your records", enabled=True)
+  - al_recipient_bundle: ALDocumentBundle.using(elements=[housing_search_log_template_21_attachment],  filename="housing_search_log_template_21", title="All forms to file", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachments:
+  #  - name: Post-interview-Instructions
+  #  filename: housing_search_log_template_21_next_steps
+  #  docx template file: housing_search_log_template_21_next_steps.docx
+  #  variable name: housing_search_log_template_21_Post_interview_instructions[i]
+  - name: housing search log template 21
+    filename: housing_search_log_template_21
+    variable name: housing_search_log_template_21_attachment[i]
+    skip undefined: True
+    docx template file: housing_search_log_template_21.docx
+
+
