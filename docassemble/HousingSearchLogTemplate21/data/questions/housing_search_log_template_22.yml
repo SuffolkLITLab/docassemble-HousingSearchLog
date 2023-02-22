@@ -1,0 +1,579 @@
+---
+include:
+  - docassemble.AssemblyLine:assembly_line.yml
+---
+metadata:
+  title: |
+    Create a Housing Search List
+  short title: |
+    My Housing Search
+  authors:
+    - Ana Morrissette
+---
+mandatory: True
+comment: |
+  Global interview metadata
+variable name: interview_metadata["housing_search_log_template_22"]
+data:
+  al_weaver_version: "1.7.0"
+  generated on: "2022-11-21"
+  title: >-
+    My Housing Search List
+  short title: >-
+    Housing search list template, to be filled out to keep track of housing search
+  description: |-
+    Creates a record of properties contacted, visited, or applied to rent.
+  original_form: >-
+    None
+  allowed courts: []
+  categories: []
+  typical role: "na"
+  generate download screen: True
+---
+code: |
+  interview_metadata['main_interview_key'] =  'housing_search_log_template_22'
+---
+code: |
+  # This controls the default country and list of states in address field questions
+  AL_DEFAULT_COUNTRY = "US"
+---
+code: |
+  # This controls the default state in address field questions
+  AL_DEFAULT_STATE = "MA"
+---
+code: |
+  github_repo_name =  'docassemble-HousingSearchLogTemplate22'
+---
+code: |
+  interview_short_title = "Keep track of properties for your housing search."
+---
+code: |
+  al_form_type = "other" 
+---
+modules:
+  - docassemble.base.core
+  - docassemble.base.util
+---
+objects:
+  - users: ALPeopleList.using(ask_number=True,target_number=1)
+  - prop: DAList.using(object_type = DAObject, there_is_another=False, there_are_any=True, complete_attribute=["info"])
+---
+sections:
+  - review_housing_search_log_template_22: Review your answers
+---
+#################### Interview order #####################
+comment: |
+  Controls order and branching logic for questions specific to this form
+id: interview_order_housing_search_log_template_22
+code: |
+  # Set the allowed courts for this interview
+  allowed_courts = interview_metadata["housing_search_log_template_22"]["allowed courts"]
+  nav.set_section("review_housing_search_log_template_22")
+  user_role = "na"
+  users.gather()
+  set_parts(subtitle=str(users))
+  has_voucher
+  prop.gather()
+  review_prop
+  prop.table
+  interview_order_housing_search_log_template_22 = True
+---
+###################### Main order ######################
+comment: |
+  This block includes the logic for standalone interviews.
+  Delete mandatory: True to include in another interview
+mandatory: True
+code: |
+  al_intro_screen
+  housing_search_log_template_22_intro
+  interview_order_housing_search_log_template_22
+  signature_date
+  # Store anonymous data for analytics / statistics
+  store_variables_snapshot(
+      persistent=True,
+      data={
+          "zip": showifdef("users[0].address.zip"),
+          "reached_interview_end": True,
+      },
+  )
+  housing_search_log_template_22_download
+---
+id: basic questions intro screen
+decoration: form-lineal
+question: |
+  Make a Housing Search List
+subquestion: |
+  % if form_approved_for_email_filing:
+  ${ AL_ORGANIZATION_TITLE } can help you complete and file court forms in 3 steps:
+  % else:
+  ${ AL_ORGANIZATION_TITLE } can help you complete and download forms in 3 steps:
+  % endif
+  
+  Step 1. Make an account by clicking "menu" in the upper righthand corner.  
+  Step 2. Answer questions that will fill in your form for you.  
+  Step 3. Preview, Edit, and Email the form to yourself using this secure website and save copies
+  
+  This site is not a lawyer. If you would like a lawyer, find [your local
+  legal aid provider](https://www.lsc.gov/what-legal-aid/find-legal-aid).
+  
+  Tap the {green words} in any screen for a definition or more information.
+  
+  % if chat_partners_available().help:
+  Live help is currently available in this interview. Click the speech bubble
+  (:comment-alt:) in the navigation bar to connect to a live advocate for help.
+  % endif
+fields:
+  - To continue, you must accept our [terms of use](${ AL_ORGANIZATION_HOMEPAGE }/privacy/): acknowledged_information_use
+    datatype: checkboxes
+    none of the above: False    
+    minlength: 1
+    choices:
+      - I accept the terms of use.
+    validation messages:
+      minlength: |
+        You cannot continue unless you agree to the terms of use.        
+continue button field: al_intro_screen
+terms:
+  green words: |
+    Green words are legal terms or a short way of referring to something that needs more explanation. The definition or explanation pops up when you tap the green words
+---
+id: Housing_Search_Log
+continue button field: housing_search_log_template_22_intro
+question: |
+  Housing Search List
+subquestion: |
+  This form will create a list of properties you have contacted or visited. You can put in as much information as you want. 
+  
+  The form can be edited by:
+  
+  - Make an account by clicking "menu" in the upper righthand corner. The document will be saved to your account and can be edited by logging in to your account. 
+  
+  - Sending yourself a link to edit by clicking the "save and resume" button at the bottom and inputting your email address. 
+  
+  - Once you have added your information, **you should always download the document or email yourself a copy of the document each time you edit the document.**
+  
+  **Warning: a link to edit will only work for 48 hours when it is sent. Be sure to revist this page to send yourself a new link or download the form. If you make an account, it will be saved for editting in your account for 90 days.**
+---
+id: your name
+sets:
+  - users[0].name.first
+  - users[0].name.last
+question: |
+  What is your name?
+fields:
+  - code: |
+      users[0].name_fields(show_suffix=False)
+---
+id: Voucher Information
+question: |
+  Do you have a housing voucher? 
+subquestion: |
+  If you do not have a housing voucher, please press "Next". 
+fields:
+  - "I have a housing voucher": has_voucher 
+    datatype: yesnowide
+  - "Bedroom size": bedroom_size
+    input type: dropdown
+    choices:
+      - Studio
+      - 1
+      - 2
+      - 3
+      - 4
+      - 5+
+    required: False
+    js show if: |
+      val('has_voucher') == true
+  - "Voucher issuer": voucher_issuer
+    required: False
+    js show if: |
+      val('has_voucher') == true
+  - "Date voucher was issued": voucher_date
+    datatype: date
+    required: False
+    js show if: |
+      val('has_voucher') == true
+---
+id: Property Information
+question: |
+  Property Information
+subquestion: |
+  Please fill out as much information as you have for the property you contacted to rent, visited, or applied to rent. 
+fields:
+  - "**Property Address**": prop[i].info
+  - "Link to online posting of property": prop[i].link
+    required: False
+  - "I contacted the property listing": prop[i].contact_q
+    datatype: yesnowide
+  - "Date of Contact": prop[i].contact_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "Phone number contacted for property": prop[i].phone_number
+    datatype: text
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "Email address contacted for property": prop[i].email
+    datatype: email
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "I visited the property": prop[i].visit_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].contact_q') == true  
+  - "Date of Visit": prop[i].visit_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].visit_q') == true  
+  - "I applied to rent the property": prop[i].apply_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].visit_q') == true 
+  - "Date of Application": prop.apply_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].apply_q') == true 
+  - "**What is the status of renting this property?**": prop[i].status
+    input type: dropdown
+    choices:
+      - Waiting for a response back. 
+      - Waiting to visit the property. 
+      - Filling out application. 
+      - Waiting for result of application. 
+      - Application was accepted. 
+      - Application was denied. 
+    required: False
+  - "I think I was unlawfully discriminated against by the property owners or agents.": prop[i].discrimination_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "**Notes**": prop[i].user_notes
+    required: False
+    help: |
+      Please describe why you think you were unlawfully discriminated against. 
+    js show if: |
+      val('prop[i].discrimination_q') == true
+---
+mandatory: True
+code: |
+  if prop.add_another:
+    review_prop
+---
+question: | 
+  Add another property?
+yesno: prop.add_another
+---
+table: prop.table
+rows: prop
+columns: 
+  - Address: |
+      row_item.info
+edit:
+  - info
+---
+question: | 
+  Properties
+subquestion: |
+  So far you have added ${prop.number_as_word()} properties.
+  
+  ${prop.table}
+
+  ${prop.add_action() }
+field: review_prop
+---
+question: |
+  Information about the ${ordinal(i)} Property. 
+fields:
+  - "**Property Address**": prop[i].info
+  - "Link to online posting of property": prop[i].link
+    required: False
+  - "I contacted the property listing": prop[i].contact_q
+    datatype: yesnowide
+  - "Date of Contact": prop[i].contact_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "Name of person contacted": prop[i].contact_name
+    datatype: text
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "Phone number contacted for property": prop[i].phone_number
+    datatype: text
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "Email address contacted for property": prop[i].email
+    datatype: text
+    required: False
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "I visited the property": prop[i].visit_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].contact_q') == true  
+  - "Date of Visit": prop[i].visit_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].visit_q') == true  
+  - "I applied to rent the property": prop[i].apply_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].visit_q') == true 
+  - "Date of Application": prop[i].apply_date
+    datatype: date
+    required: False
+    js show if: |
+      val('prop[i].apply_q') == true 
+  - "**What is the status of renting this property?**": prop[i].status
+    input type: dropdown
+    choices:
+      - Waiting for a response back. 
+      - Waiting to visit the property. 
+      - Filling out application. 
+      - Waiting for result of application. 
+      - Application was accepted. 
+      - Application was denied. 
+    required: False
+  - "I think I was unlawfully discriminated against by the property owners or agents.": prop[i].discrimination_q
+    datatype: yesnowide
+    js show if: |
+      val('prop[i].contact_q') == true
+  - "**Notes**": prop[i].user_notes
+    required: False
+    help: |
+      Please describe why you think you were unlawfully discriminated against. 
+    js show if: |
+      val('prop[i].discrimination_q') == true
+---
+default screen parts:
+  under: |
+    [Save and resume later](${ url_action('al_share_form_screen') })
+---
+event: al_share_form_screen
+question: |
+  Click the button to save a link to resume your interview later
+subquestion: |
+  ${ copy_button_html( interview_url() ) }
+---
+continue button field: al_share_form_screen
+id: al share form screen
+question: |  
+  Share this website
+fields:  
+  - Would you like a link to access or share your answers?: al_sharing_type
+    datatype: radio
+    choices:
+     - Yes: share_answers
+  - How do you want to share the link?: al_how_share_link
+    datatype: radio
+    choices:       
+      - Email or text message: email_or_sms
+      - Just show me the link.: link_only
+    js show if: |       
+      val("al_sharing_type") === "tell_friend" || val("al_sharing_type") === "share_answers" 
+  - note: |    
+     **Note: the person you share this link with will be able to see and edit your answers      on this form.**
+ 
+    js show if: |      
+      val("al_sharing_type") === "share_answers" &&  ( val("al_how_share_link") ===               "email_or_sms" || val("al_how_share_link") === "link_only" )  
+  - note: |      
+      You can copy and share this link            
+      
+      ${ copy_button_html(  interview_url(i=user_info().filename, style="short", new_session=1), label=al_copy_button_label.show(), tooltip_inert_text=al_copy_button_tooltip_inert_text.show(), tooltip_copied_text = al_copy_button_tooltip_copied_text.show() ) }    
+ 
+    js show if: |      
+      val("al_sharing_type") === "tell_friend" && val("al_how_share_link") === "link_only"        
+  - note: |      
+      You can copy and share this link (expires in 48 hours)      ${ copy_button_html( interview_url(), label=al_copy_button_label.show(), tooltip_inert_text=al_copy_button_tooltip_inert_text.show(), tooltip_copied_text = al_copy_button_tooltip_copied_text.show()) }    
+ 
+    js show if: |      
+      val("al_sharing_type") === "share_answers" && val("al_how_share_link") === "link_only"  
+  - Email or phone number you want to send this to: share_interview_contact_method
+    validate: is_phone_or_email
+    show if:      
+      variable: al_how_share_link
+      is: email_or_sms      
+  - Your name: al_share_form_from_name
+    required: false
+    default: ${ str(users[0]) if defined('users[0].name.first') else '' }    
+    show if:      
+      variable: al_how_share_link
+      is: email_or_sms
+  - note: |      
+      <a class="btn btn-primary btn-sm btn-secondary" href="${ export_interview_variables().url_for(attachment=True) }" role="button"><i class="far fa-file-code"></i> Export in JSON format</a>    
+ 
+    show if:      
+      variable: al_how_share_link      
+      is: download_jsonback 
+back button label: |  
+  Back to your form
+---
+template: al_share_answers_message_template
+subject: |  
+  ${ AL_ORGANIZATION_TITLE } form from ${ al_share_form_from_name }
+content: |  
+  ${ share_interview_answers_message }  
+  Click the link below to view and edit ${ al_share_form_from_name }'s  progress so far:   
+  
+  ${ interview_url() }
+---
+id: preview housing_search_log_template_22
+question: |
+  Preview your form before you sign it
+subquestion: |
+  Here is a preview of the form you will sign on the next page.   
+  
+  ${ al_recipient_bundle.as_pdf(key='preview') }
+
+  Click the image to open it in a new tab. Click the "Edit answers" button
+  to edit your answers.
+
+  ${ action_button_html(url_action('review_housing_search_log_template_22'), label='Edit answers', color='info') }
+  
+  Remember to come back to this window to continue and sign your form.
+continue button field: housing_search_log_template_22_preview_question    
+---
+code: |
+  signature_fields = []
+---
+id: housing search log template 22 review screen
+event: review_housing_search_log_template_22
+question: |
+  Review your answers
+review:
+  - Edit: bedroom_size
+    button: |
+      **Bedroom size**:
+      ${ bedroom_size }
+  - Edit: prop[i].link
+    button: |
+      **Prop link**:
+      ${ prop[i].link }
+  - Edit: prop[i].contact_date
+    button: |
+      **Date of Contact**:
+      ${ prop[i].contact_date }
+  - Edit: prop[i].info
+    button: |
+      **Property Address**:
+      ${ prop[i].info }
+  - Edit: prop[i].phone_number
+    button: |
+      **Property Phone Number**:
+      ${ prop[i].phone_number }
+  - Edit: prop[i].contact_q
+    button: |
+      **Contact**:
+      ${ word(yesno(prop[i].contact.q)) }
+  - Edit: voucher_issuer
+    button: |
+      **Voucher issuer**:
+      ${ voucher_issuer }
+  - Edit: prop[i].status
+    button: |
+      **Property status**:
+      ${ prop[i].status }
+  - Edit: prop[i].visit.date
+    button: |
+      **Date of Visit**:
+      ${ prop[i].visit.date }
+  - Edit: voucher_date
+    button: |
+      **Date of Voucher**:
+      ${ voucher_date }
+  - Edit: prop[i].visit_q
+    button: |
+      **Visit**:
+      ${ word(yesno(prop[i].visit.q)) }
+  - Edit: prop[i].apply_q
+    button: |
+      **Apply**:
+      ${ word(yesno(prop[i].apply.q)) }
+  - Edit: users.revisit
+    button: |
+      **Users**
+
+      % for item in users:
+        * ${ item }
+      % endfor
+  - Edit: prop[i].apply.date
+    button: |
+      **Date of Application**:
+      ${ prop[i].apply.date }
+  - Edit: prop[i].user_notes
+    button: |
+      **User notes**:
+      ${ prop[i].user_notes }
+  - Edit: prop[i].email
+    button: |
+      **Property email**:
+      ${ prop[i].email }
+---
+continue button field: users.revisit
+question: |
+  Edit users
+subquestion: |
+  ${ users.table }
+
+  ${ users.add_action() }
+---
+table: users.table
+rows: users
+columns:
+  - Name: |
+      row_item.name.full() if defined("row_item.name.first") else ""
+edit:
+  - name.first
+confirm: True
+
+---
+id: download housing_search_log_template_22
+event: housing_search_log_template_22_download
+question: |
+  All done
+subquestion: |
+  Thank you ${users}. Your form is ready to download and deliver.
+  
+  View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
+  ${ action_button_html(url_action('review_housing_search_log_template_22'), label='Edit answers', color='info') }
+  
+  ${ al_user_bundle.download_list_html() }
+  
+
+  ${ al_user_bundle.send_button_html(show_editable_checkbox=True) }
+  
+  ** You can email this form to yourself, your attorney, your housing authority worker or advocate, or anyone else using the email box above. Be sure to press "send". If you do not receive the email, please check your spam folder. **
+  
+progress: 100
+---
+# ALDocument objects specify the metadata for each template
+objects:
+  #- housing_search_log_template_22_Post_interview_instructions: ALDocument.using(title="Instructions", filename="housing_search_log_template_22_next_steps.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - housing_search_log_template_22_attachment: ALDocument.using(title="Housing Search Log", filename="housing_search_log_template_22", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+---
+# Bundles group the ALDocuments into separate downloads, such as for court and for the user
+objects:
+  - al_user_bundle: ALDocumentBundle.using(elements=[ housing_search_log_template_22_attachment], filename="housing_search_log_template_22", title="All forms to download for your records", enabled=True)
+  - al_recipient_bundle: ALDocumentBundle.using(elements=[housing_search_log_template_22_attachment],  filename="housing_search_log_template_22", title="All forms to file", enabled=True)
+---
+# Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
+# used for "preview" and "final" keys, and logic in the template checks the value of 
+# `i` to show or hide the user's signature
+attachments:
+  #  - name: Post-interview-Instructions
+  #  filename: housing_search_log_template_22_next_steps
+  #  docx template file: housing_search_log_template_22_next_steps.docx
+  #  variable name: housing_search_log_template_22_Post_interview_instructions[i]
+  - name: housing search log template 22
+    filename: housing_search_log_template_22
+    variable name: housing_search_log_template_22_attachment[i]
+    skip undefined: True
+    docx template file: housing_search_log_template_22.docx
