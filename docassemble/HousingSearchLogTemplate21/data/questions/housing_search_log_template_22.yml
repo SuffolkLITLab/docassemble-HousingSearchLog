@@ -84,6 +84,7 @@ comment: |
   Delete mandatory: True to include in another interview
 mandatory: True
 code: |
+  welcome_page
   al_intro_screen
   housing_search_log_template_22_intro
   interview_order_housing_search_log_template_22
@@ -98,6 +99,29 @@ code: |
   )
   housing_search_log_template_22_download
 ---
+id: welcome screen
+decoration: form-lineal
+question: |
+  # An easy way to record your housing search!
+subquestion: |
+  ## Keeping track of all the properties you contact and visit can be hard, but this tool is here to help guide that process. 
+  ![housing](https://static.vecteezy.com/system/resources/thumbnails/002/785/799/small_2x/little-town-in-retro-style-illustration-free-vector.jpg)
+ 
+  ## How this website can help you:
+  * Track who you spoke with and when.
+  * Easily provide housing search information to a housing authority--this is important with a voucher if you need to extend your housing search deadline.
+  * Show the court you have been actively looking for housing as the court may consider this in an eviction proceeding.
+  
+  ## How it works:
+  * Answer a few basic questions. 
+  * When you contact or visit a rental property, input the information you have into the prompts. 
+  * Come back to this website and edit your form each time you contact or visit a new rental property, or have an update on an existing property.
+  * Download or email your completed form once you have recorded as many properties as you would like.
+  
+  ## Quick, free, and easy to use!
+  ### This website is safe to use. You do not have to share this information with anyone if you do not want to. 
+continue button field: welcome_page
+---
 id: basic questions intro screen
 decoration: form-lineal
 question: |
@@ -111,7 +135,7 @@ subquestion: |
   
   Step 1. Make an account by clicking "menu" in the upper righthand corner.  
   Step 2. Answer questions that will fill in your form for you.  
-  Step 3. Preview, Edit, and Email the form to yourself using this secure website and save copies
+  Step 3. Preview, Edit, and Email the form to yourself using this secure website and save copies.
   
   This site is not a lawyer. If you would like a lawyer, find [your local
   legal aid provider](https://www.lsc.gov/what-legal-aid/find-legal-aid).
@@ -152,7 +176,7 @@ subquestion: |
   
   - Once you have added your information, **you should always download the document or email yourself a copy of the document each time you edit the document.**
   
-  **Warning: a link to edit will only work for 48 hours when it is sent. Be sure to revist this page to send yourself a new link or download the form. If you make an account, it will be saved for editting in your account for 90 days.**
+  **Warning: a link to edit will only work for 48 hours when it is sent. Be sure to revisit this page to send yourself a new link or download the form. If you make an account, it will be saved for editting in your account for 90 days.**
 ---
 id: your name
 sets:
