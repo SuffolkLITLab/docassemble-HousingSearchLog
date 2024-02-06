@@ -1,6 +1,14 @@
 ---
+translations:
+  - housing_search_log_km.xlsx
+---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
+---
+variable name: al_interview_languages
+data:
+  - en
+  - km
 ---
 metadata:
   title: |
