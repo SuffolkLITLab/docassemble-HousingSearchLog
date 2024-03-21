@@ -1,15 +1,16 @@
 ---
 translations:
   - housing_search_log_km.xlsx
-  # Put other languages here
+  # Put other languages here, e.g., - housing_search_log_es.xlsx
 ---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
 ---
-variable name
+variable name: al_interview_languages
 data:
   - en
   - km
+  #- es
 ---
 metadata:
   title: |

@@ -6,7 +6,7 @@ translations:
 include:
   - docassemble.AssemblyLine:assembly_line.yml
 ---
-variable name
+variable name: al_interview_languages
 data:
   - en
   - km
