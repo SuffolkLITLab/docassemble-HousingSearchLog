@@ -1,6 +1,15 @@
 ---
+translations:
+  - housing_search_log_km.xlsx
+  # Put other languages here
+---
 include:
   - docassemble.AssemblyLine:assembly_line.yml
+---
+variable name
+data:
+  - en
+  - km
 ---
 metadata:
   title: |
