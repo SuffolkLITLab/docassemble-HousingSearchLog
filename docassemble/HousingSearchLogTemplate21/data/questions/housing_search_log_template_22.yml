@@ -1,6 +1,7 @@
 ---
 translations:
   - housing_search_log_km.xlsx
+  - housing_search_log_es.xlsx
   # Put other languages here, e.g., - housing_search_log_es.xlsx
 ---
 include:
@@ -10,7 +11,7 @@ variable name: al_interview_languages
 data:
   - en
   - km
-  #- es
+  - es
 ---
 metadata:
   title: |
@@ -70,6 +71,10 @@ objects:
 ---
 sections:
   - review_housing_search_log_template_22: Review your answers
+---
+language: es
+sections:
+  - review_housing_search_log_template_22: Revise sus respuestas
 ---
 #################### Interview order #####################
 comment: |
@@ -188,6 +193,44 @@ subquestion: |
   
   **Warning: a link to edit will only work for 48 hours when it is sent. Be sure to revisit this page to send yourself a new link or download the form. If you make an account, it will be saved for editing in your account for 90 days.**
 ---
+language: es
+id: Housing_Search_Log
+continue button field: housing_search_log_template_22_intro
+question: |
+  "Lista de búsqueda de viviendas"
+subquestion: |
+  Este formulario creará una lista de las propiedades con las que ha contactado o visitado. Puedes poner toda la información que quieras. 
+  
+  El formulario puede ser editado por:
+  
+  - Crear una cuenta haciendo clic en "menú" en la esquina superior derecha. El documento se guardará en su cuenta y se podrá editar iniciando sesión en su cuenta. 
+  
+  - Enviándote un enlace para editar haciendo clic en el botón "guardar y reanudar" en la parte inferior e ingresando tu dirección de correo electrónico. 
+  
+  -  Una vez que haya agregado su información, **siempre debe descargar el documento o enviarse por correo electrónico una copia del documento cada vez que edite el documento.**
+  
+  **Advertencia: Un enlace para editar solo funcionará durante 48 horas cuando se envíe. Asegúrese de volver a visitar esta página para enviarse un nuevo enlace o descargar el formulario. Si crea una cuenta, se guardará para editar en su cuenta durante 90 días.**
+---
+
+language: es
+id: Housing_Search_Log
+continue button field: housing_search_log_template_22_intro
+question: |
+  Lista de búsqueda de viviendas
+subquestion: |
+  Este formulario creará una lista de las propiedades con las que ha contactado o visitado. Puedes poner toda la información que quieras. 
+  
+  El formulario puede ser editado por:
+  
+  - Crear una cuenta haciendo clic en "menú" en la esquina superior derecha. El documento se guardará en su cuenta y se podrá editar iniciando sesión en su cuenta. 
+  
+  - Enviándote un enlace para editar haciendo clic en el botón "guardar y reanudar" en la parte inferior e ingresando tu dirección de correo electrónico. 
+  
+  - Una vez que haya agregado su información, **siempre debe descargar el documento o enviarse por correo electrónico una copia del documento cada vez que edite el documento.**
+  
+  **Advertencia: Un enlace para editar solo funcionará durante 48 horas cuando se envíe. Asegúrese de volver a visitar esta página para enviarse un nuevo enlace o descargar el formulario. Si crea una cuenta, se guardará para editar en su cuenta durante 90 días.**
+
+---
 id: your name
 sets:
   - users[0].name.first
@@ -228,6 +271,7 @@ fields:
     js show if: |
       val('has_voucher') == true
 ---
+
 id: Property Information
 question: |
   Property Information
