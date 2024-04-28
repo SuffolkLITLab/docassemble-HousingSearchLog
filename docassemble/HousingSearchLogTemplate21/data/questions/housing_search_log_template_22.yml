@@ -1,7 +1,0 @@
----
-comment: |
-  This file is deprecated
----
-mandatory: True
-code: |
-  response(url=interview_url(i="docassemble.HousingSearchLog:housing_search_log.yml"))
