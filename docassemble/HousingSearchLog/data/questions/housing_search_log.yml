@@ -71,7 +71,7 @@ metadata:
 mandatory: True
 comment: |
   Global interview metadata
-variable name: interview_metadata["housing_search_log_template_22"]
+variable name: interview_metadata["housing_search_log"]
 data:
   al_weaver_version: "1.7.0"
   generated on: "2022-11-21"
@@ -89,7 +89,7 @@ data:
   generate download screen: True
 ---
 code: |
-  interview_metadata['main_interview_key'] =  'housing_search_log_template_22'
+  interview_metadata['main_interview_key'] =  'housing_search_log'
 ---
 code: |
   # This controls the default country and list of states in address field questions
@@ -117,20 +117,20 @@ objects:
   - prop: DAList.using(object_type = DAObject, there_is_another=False, there_are_any=True, complete_attribute=["info"])
 ---
 sections:
-  - review_housing_search_log_template_22: Review your answers
+  - review_housing_search_log: Review your answers
 ---
 language: es
 sections:
-  - review_housing_search_log_template_22: Revise sus respuestas
+  - review_housing_search_log: Revise sus respuestas
 ---
 #################### Interview order #####################
 comment: |
   Controls order and branching logic for questions specific to this form
-id: interview_order_housing_search_log_template_22
+id: interview_order_housing_search_log
 code: |
   # Set the allowed courts for this interview
-  allowed_courts = interview_metadata["housing_search_log_template_22"]["allowed courts"]
-  nav.set_section("review_housing_search_log_template_22")
+  allowed_courts = interview_metadata["housing_search_log"]["allowed courts"]
+  nav.set_section("review_housing_search_log")
   user_role = "na"
   users.gather()
   set_parts(subtitle=str(users))
@@ -138,7 +138,7 @@ code: |
   prop.gather()
   review_prop
   prop.table
-  interview_order_housing_search_log_template_22 = True
+  interview_order_housing_search_log = True
 ---
 ###################### Main order ######################
 comment: |
@@ -148,8 +148,8 @@ mandatory: True
 code: |
   welcome_page
   al_intro_screen
-  housing_search_log_template_22_intro
-  interview_order_housing_search_log_template_22
+  housing_search_log_intro
+  interview_order_housing_search_log
   signature_date
   # Store anonymous data for analytics / statistics
   store_variables_snapshot(
@@ -159,7 +159,7 @@ code: |
           "reached_interview_end": True,
       },
   )
-  housing_search_log_template_22_download
+  housing_search_log_download
 ---
 id: welcome screen
 decoration: form-lineal
@@ -224,7 +224,7 @@ terms:
     Green words are legal terms or a short way of referring to something that needs more explanation. The definition or explanation pops up when you tap the green words
 ---
 id: Housing_Search_Log
-continue button field: housing_search_log_template_22_intro
+continue button field: housing_search_log_intro
 question: |
   Housing Search List
 subquestion: |
@@ -242,7 +242,7 @@ subquestion: |
 ---
 language: es
 id: Housing_Search_Log
-continue button field: housing_search_log_template_22_intro
+continue button field: housing_search_log_intro
 question: |
   "Lista de búsqueda de viviendas"
 subquestion: |
@@ -261,7 +261,7 @@ subquestion: |
 
 language: es
 id: Housing_Search_Log
-continue button field: housing_search_log_template_22_intro
+continue button field: housing_search_log_intro
 question: |
   Lista de búsqueda de viviendas
 subquestion: |
@@ -550,7 +550,7 @@ content: |
   
   ${ interview_url() }
 ---
-id: preview housing_search_log_template_22
+id: preview housing_search_log
 question: |
   Preview your form before you sign it
 subquestion: |
@@ -561,16 +561,16 @@ subquestion: |
   Click the image to open it in a new tab. Click the "Edit answers" button
   to edit your answers.
 
-  ${ action_button_html(url_action('review_housing_search_log_template_22'), label='Edit answers', color='info') }
+  ${ action_button_html(url_action('review_housing_search_log'), label='Edit answers', color='info') }
   
   Remember to come back to this window to continue and sign your form.
-continue button field: housing_search_log_template_22_preview_question    
+continue button field: housing_search_log_preview_question    
 ---
 code: |
   signature_fields = []
 ---
 id: housing search log template 22 review screen
-event: review_housing_search_log_template_22
+event: review_housing_search_log
 question: |
   Review your answers
 review:
@@ -660,15 +660,15 @@ edit:
 confirm: True
 
 ---
-id: download housing_search_log_template_22
-event: housing_search_log_template_22_download
+id: download housing_search_log
+event: housing_search_log_download
 question: |
   All done
 subquestion: |
   Thank you ${users}. Your form is ready to download and deliver.
   
   View, download and send your form below. Click the "Edit answers" button to fix any mistakes.
-  ${ action_button_html(url_action('review_housing_search_log_template_22'), label='Edit answers', color='info') }
+  ${ action_button_html(url_action('review_housing_search_log'), label='Edit answers', color='info') }
   
   ${ al_user_bundle.download_list_html() }
   
@@ -681,24 +681,24 @@ progress: 100
 ---
 # ALDocument objects specify the metadata for each template
 objects:
-  #- housing_search_log_template_22_Post_interview_instructions: ALDocument.using(title="Instructions", filename="housing_search_log_template_22_next_steps.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
-  - housing_search_log_template_22_attachment: ALDocument.using(title="Housing Search Log", filename="housing_search_log_template_22", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  #- housing_search_log_Post_interview_instructions: ALDocument.using(title="Instructions", filename="housing_search_log_next_steps.docx", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
+  - housing_search_log_attachment: ALDocument.using(title="Housing Search Log", filename="housing_search_log", enabled=True, has_addendum=False, default_overflow_message=AL_DEFAULT_OVERFLOW_MESSAGE)
 ---
 # Bundles group the ALDocuments into separate downloads, such as for court and for the user
 objects:
-  - al_user_bundle: ALDocumentBundle.using(elements=[ housing_search_log_template_22_attachment], filename="housing_search_log_template_22", title="All forms to download for your records", enabled=True)
-  - al_recipient_bundle: ALDocumentBundle.using(elements=[housing_search_log_template_22_attachment],  filename="housing_search_log_template_22", title="All forms to file", enabled=True)
+  - al_user_bundle: ALDocumentBundle.using(elements=[ housing_search_log_attachment], filename="housing_search_log", title="All forms to download for your records", enabled=True)
+  - al_recipient_bundle: ALDocumentBundle.using(elements=[housing_search_log_attachment],  filename="housing_search_log", title="All forms to file", enabled=True)
 ---
 # Each attachment defines a key in an ALDocument. We use `i` as the placeholder here so the same template is 
 # used for "preview" and "final" keys, and logic in the template checks the value of 
 # `i` to show or hide the user's signature
 attachments:
   #  - name: Post-interview-Instructions
-  #  filename: housing_search_log_template_22_next_steps
-  #  docx template file: housing_search_log_template_22_next_steps.docx
-  #  variable name: housing_search_log_template_22_Post_interview_instructions[i]
-  - name: housing search log template 22
-    filename: housing_search_log_template_22
-    variable name: housing_search_log_template_22_attachment[i]
+  #  filename: housing_search_log_next_steps
+  #  docx template file: housing_search_log_next_steps.docx
+  #  variable name: housing_search_log_Post_interview_instructions[i]
+  - name: housing search log
+    filename: housing_search_log
+    variable name: housing_search_log_attachment[i]
     skip undefined: True
-    docx template file: housing_search_log_template_22.docx
+    docx template file: housing_search_log.docx

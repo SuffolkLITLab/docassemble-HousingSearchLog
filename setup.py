@@ -43,10 +43,10 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
                 out.setdefault(package, []).append(prefix+name)
     return out
 
-setup(name='docassemble.HousingSearchLogTemplate21',
+setup(name='docassemble.HousingSearchLog1',
       version='1.1',
       description=('Housing Search Log'),
-      long_description='# docassemble.HousingSearchLogTemplate21\r\n\r\nHousing Search Log\r\n\r\n## Author\r\n\r\nAna Morrissette\r\n\r\n',
+      long_description='# docassemble.HousingSearch\r\n\r\nHousing Search Log\r\n\r\n## Author\r\n\r\nAna Morrissette\r\n\r\n',
       long_description_content_type='text/markdown',
       author='Ana Morrissette',
       author_email='amorrissette@su.suffolk.edu',
@@ -56,6 +56,6 @@ setup(name='docassemble.HousingSearchLogTemplate21',
       namespace_packages=['docassemble'],
       install_requires=['docassemble.AssemblyLine>=2.27.2'],
       zip_safe=False,
-      package_data=find_package_data(where='docassemble/HousingSearchLogTemplate21/', package='docassemble.HousingSearchLogTemplate21'),
+      package_data=find_package_data(where='docassemble/HousingSearchLog/', package='docassemble.HousingSearchLog'),
      )
 
