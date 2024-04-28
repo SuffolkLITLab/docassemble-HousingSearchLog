@@ -43,7 +43,7 @@ def find_package_data(where='.', package='', exclude=standard_exclude, exclude_d
                 out.setdefault(package, []).append(prefix+name)
     return out
 
-setup(name='docassemble.HousingSearchLog1',
+setup(name='docassemble.HousingSearchLog',
       version='2.0.0',
       description=('Housing Search Log'),
       long_description='# docassemble.HousingSearch\r\n\r\nHousing Search Log\r\n\r\n## Author\r\n\r\nAna Morrissette\r\n\r\n',
