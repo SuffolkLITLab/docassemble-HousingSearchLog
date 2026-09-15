@@ -241,7 +241,7 @@ subquestion: |
   **Warning: a link to edit will only work for 48 hours when it is sent. Be sure to revisit this page to send yourself a new link or download the form. If you make an account, it will be saved for editing in your account for 90 days.**
 ---
 language: es
-id: Housing_Search_Log
+id: "Housing_Search_Log 2"
 continue button field: housing_search_log_intro
 question: |
   "Lista de búsqueda de viviendas"
@@ -260,7 +260,7 @@ subquestion: |
 ---
 
 language: es
-id: Housing_Search_Log
+id: "Housing_Search_Log 3"
 continue button field: housing_search_log_intro
 question: |
   Lista de búsqueda de viviendas
@@ -389,9 +389,12 @@ code: |
   if prop.add_another:
     review_prop
 ---
+id: "add another property"
 question: | 
   Add another property?
-yesno: prop.add_another
+fields:
+  - no label: prop.add_another
+    datatype: yesnoradio
 ---
 table: prop.table
 rows: prop
@@ -401,6 +404,7 @@ columns:
 edit:
   - info
 ---
+id: "properties"
 question: | 
   Properties
 subquestion: |
@@ -411,6 +415,7 @@ subquestion: |
   ${prop.add_action() }
 field: review_prop
 ---
+id: "information about the ordinal i property"
 question: |
   Information about the ${ordinal(i)} Property. 
 fields:
@@ -483,6 +488,7 @@ default screen parts:
     [Save and resume later](${ url_action('al_share_form_screen') })
 ---
 event: al_share_form_screen
+id: "click the button to save a link to resume your interview later"
 question: |
   Click the button to save a link to resume your interview later
 subquestion: |
@@ -643,6 +649,7 @@ review:
       ${ prop[i].email }
 ---
 continue button field: users.revisit
+id: "edit users"
 question: |
   Edit users
 subquestion: |
